@@ -12,7 +12,10 @@ import advicesRoutes from './routes/advices.js';
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://tantsaha-connect-frontend.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
