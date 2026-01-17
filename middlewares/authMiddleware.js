@@ -13,3 +13,15 @@ export function verifyToken(req, res, next) {
     next();
   });
 }
+
+export function verifyAdmin(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(403).json({ error: "Accès refusé, token manquant" });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).json({ error: "Token invalide" });
+    if (decoded.role !== 'admin') return res.status(403).json({ error: "Accès refusé, droits administrateur requis" });
+    req.user = decoded;
+    next();
+  });
+}
