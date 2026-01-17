@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 
+import { initDatabase } from './db-sqlite.js';
+
 import authRoutes from './routes/auth.js';
 import weatherRoutes from './routes/weather.js';
 import observationsRoutes from './routes/observations.js';
@@ -15,6 +17,9 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3001;
+
+// Initialiser SQLite
+await initDatabase();
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
