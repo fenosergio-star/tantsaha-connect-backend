@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://tantsaha-connect.vercel.app', 'https://tantsaha-frontend.vercel.app']
+    ? process.env.FRONTEND_URL
     : 'http://localhost:5173',
   credentials: true
 }));
