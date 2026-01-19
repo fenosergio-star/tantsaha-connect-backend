@@ -16,14 +16,11 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: true, // Autorise dynamiquement l'origine qui fait la requête
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://tantsaha-connect-frontend-ew73dhlxo-sergios-projects-df1e0526.vercel.app', 'https://tantsaha-connect-frontend-sergios-projects-df1e0526.vercel.app']
+    : 'http://localhost:5173',
+  credentials: true
 }));
-
-// TRÈS IMPORTANT : Répondre spécifiquement aux requêtes OPTIONS (Preflight)
-app.options('*', cors()); 
 
 app.use(express.json());
 app.use('/audio', express.static(path.join(process.cwd(), 'public/audio')));
