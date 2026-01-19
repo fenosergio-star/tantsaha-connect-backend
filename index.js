@@ -16,10 +16,29 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://tantsaha-connect-frontend-ew73dhlxo-sergios-projects-df1e0526.vercel.app', 'https://tantsaha-connect-frontend-sergios-projects-df1e0526.vercel.app']
-    : 'http://localhost:5173',
-  credentials: true
+  origin: function (origin, callback) {
+    // Autorise les requêtes sans origine (comme les apps mobiles ou Postman)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://tantsaha-connect-frontend-ew73dhlxo-sergios-projects-df1e0526.vercel.app',
+      'https://tantsaha-connect-frontend-sergios-projects-df1e0526.vercel.app',
+      /\.vercel\.app$/ // Autorise tous les sous-domaines vercel.app (Recommandé)
+    ];
+
+    const isAllowed = allowedOrigins.some(allowed => {
+      return allowed instanceof RegExp ? allowed.test(origin) : allowed === origin;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
