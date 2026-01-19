@@ -16,30 +16,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Autorise les requêtes sans origine (comme les apps mobiles ou Postman)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      'https://tantsaha-connect-frontend-ew73dhlxo-sergios-projects-df1e0526.vercel.app',
-      'https://tantsaha-connect-frontend-sergios-projects-df1e0526.vercel.app',
-      /\.vercel\.app$/ // Autorise tous les sous-domaines vercel.app (Recommandé)
-    ];
-
-    const isAllowed = allowedOrigins.some(allowed => {
-      return allowed instanceof RegExp ? allowed.test(origin) : allowed === origin;
-    });
-
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Autorise dynamiquement l'origine qui fait la requête
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// TRÈS IMPORTANT : Répondre spécifiquement aux requêtes OPTIONS (Preflight)
+app.options('*', cors()); 
 
 app.use(express.json());
 app.use('/audio', express.static(path.join(process.cwd(), 'public/audio')));
